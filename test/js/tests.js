@@ -4,13 +4,23 @@
   describe("the def lib", function() {
     var should;
     should = chai.should();
-    beforeEach(function() {});
-    afterEach(function() {});
+    beforeEach(function() {
+      var self;
+      this.extendSpy = sinon.spy();
+      self = this;
+      return def((function() {
+        return self.extendSpy.call(this);
+      }), "Array", "extendtest");
+    });
+    afterEach(function() {
+      return delete this.extendSpy;
+    });
     it("should handler one or three argument", function() {
-      def([]).should.have.property('defed');
-      def([], this, 'array');
-      this.should.to.have.property('array');
-      return this.array.should.to.have.property('defed');
+      var testContext;
+      def([], (testContext = {}), 'array');
+      testContext.array.should.to.be.an("array");
+      testContext.array.defed.should.to.be["true"];
+      return def([]).defed.should.to.be["true"];
     });
     it("should judge object type", function() {
       var type, typeFixtrue, value, _i, _len, _ref, _results;
@@ -68,7 +78,14 @@
       def.isType("testcase", "testcase").should.be["false"];
       return def.isType("testcase", "estcase").should.be["true"];
     });
-    it("should extend pass in object by prototype");
+    it("should extend pass in object", function() {
+      var array;
+      array = def([]);
+      array.should.have.property("extendtest");
+      array.extendtest();
+      return this.extendSpy.calledOn(array).should.be["true"];
+    });
+    it("should extend pass in object by prototype", function() {});
     return it("should extend pass in object with 4th argument of `def`");
   });
 

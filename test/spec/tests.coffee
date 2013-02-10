@@ -2,13 +2,18 @@ describe "the def lib", ->
   should = chai.should()
 
   beforeEach ->
+    @extendSpy = sinon.spy()
+    self = this
+    def (-> self.extendSpy.call this), "Array", "extendtest"
+
   afterEach ->
+    delete @extendSpy
 
   it "should handler one or three argument", ->
-    def([]).should.have.property 'defed'
-    def [], this, 'array'
-    this.should.to.have.property 'array'
-    @array.should.to.have.property 'defed'
+    def [], (testContext = {}), 'array'
+    testContext.array.should.to.be.an "array"
+    testContext.array.defed.should.to.be.true
+    def([]).defed.should.to.be.true
 
   it "should judge object type", ->
     typeFixtrue = [
@@ -45,5 +50,11 @@ describe "the def lib", ->
     def.isType("testcase", "testcase").should.be.false
     def.isType("testcase", "estcase").should.be.true
 
-  it "should extend pass in object by prototype"
+  it "should extend pass in object", ->
+    array = def []
+    array.should.have.property "extendtest"
+    array.extendtest()
+    @extendSpy.calledOn(array).should.be.true
+
+  it "should extend pass in object by prototype", ->
   it "should extend pass in object with 4th argument of `def`"
