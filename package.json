@@ -1,7 +1,7 @@
 {
   "name": "def",
-  "version": "0.0.0",
-  "description": "a tool to add attribute when object defined",
+  "version": "0.0.1",
+  "description": "a tool to add propertys which defined before when object defining",
   "main": "index.js",
   "directories": {
     "test": "test"

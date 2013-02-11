@@ -85,8 +85,17 @@
       array.extendtest();
       return this.extendSpy.calledOn(array).should.be["true"];
     });
-    it("should extend pass in object by prototype", function() {});
-    return it("should extend pass in object with 4th argument of `def`");
+    return it("should extend pass in object with 4th argument of `def`", function() {
+      var array, extra;
+      extra = {
+        Array: {
+          testProp: true
+        }
+      };
+      array = def([], extra);
+      array.should.have.property("testProp");
+      return array.testProp.should.be["true"];
+    });
   });
 
 }).call(this);

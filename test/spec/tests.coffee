@@ -56,5 +56,8 @@ describe "the def lib", ->
     array.extendtest()
     @extendSpy.calledOn(array).should.be.true
 
-  it "should extend pass in object by prototype", ->
-  it "should extend pass in object with 4th argument of `def`"
+  it "should extend pass in object with 4th argument of `def`", ->
+    extra = Array: testProp: true
+    array = def [], extra
+    array.should.have.property "testProp"
+    array.testProp.should.be.true

@@ -13,17 +13,21 @@
   ###
   def prop, className, propName
   def fn, "judge", className
-  def obj, [context, varname]
+  def obj [, context, varname] [, tmpExtraMap]
   ###
   def = (obj, args...) ->
     throw new Error 'must pass in an object' unless obj?
-    return extendObj(obj) unless args.length
+    # def obj [, tmpExtraMap]
+    return extendObj(obj, args[0]) if args.length in [0, 1]
     fn = if args[0] is "judge" \
+      # def fn, "judge", className
       then regJudge \
       else if args[0] in (k for own k of typeJudge) \
+      # def prop, className, propName
       then regExtend(args[0]) \
+      # def obj, context, varname [, tmpExtraMap]
       else
-        extendObj obj
+        extendObj obj, args[3]
         bindToContext args[0]
     fn obj, args[1]
     obj
@@ -35,21 +39,25 @@
   regJudge = (judge, className) ->
     typeJudge[className] = judge
 
-  def._extend = extend = {}
+  def._extension = extension = {}
   regExtend = (className) ->
     (prop, propName) ->
-      extend[className] or= {}
-      extend[className][propName] or= prop
+      extension[className] or= {}
+      extension[className][propName] or= prop
 
   bindToContext = (context) ->
     (obj, varname) ->
       context[varname] = obj
 
-  extendObj = (obj) ->
-    for className, propData of extend when isType className, obj
-      for propName, prop of propData
-        obj[propName] = prop
+  extend = (obj, extension) ->
+    for className, propData of extension when isType className, obj
       obj.defed = true
+      obj[propName] = prop for propName, prop of propData
+    obj
+
+  extendObj = (obj, extraMap) ->
+    extend obj, extension
+    extend obj, extraMap if extraMap
     obj
 
   olddef = @def
