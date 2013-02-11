@@ -71,8 +71,25 @@
         G["is#{className}"] obj
       , "judge", className
 
+  # register underscore.js extension
   if _?.chain?()
-    underscoreArrayFns = "first initial last rest compact flatten without union intersection difference uniq zip object range".split " "
-    for method in underscoreArrayFns
-      def _[method], "Array", method
+    callUnderscoreMethod = (method) -> ->
+      _[method] this, arguments...
+
+    _arrayFns = "first initial last rest compact flatten without union intersection difference uniq zip object range".split " "
+    for method in _arrayFns
+      def callUnderscoreMethod(method), "Array", method
+
+    _objectFns = "keys values pairs invert functions extend pick omit defaults clone tap has".split " "
+    for method in _objectFns
+      def callUnderscoreMethod(method), "PlainObject", method
+
+    _funcFns = "bind partial memoize delay defer throttle debounce once wrap".split " "
+    for method in _funcFns
+      def callUnderscoreMethod(method), "Function", method
+
+    # TODO: how to extend a simple obj
+    _stringFns = "escape unescape template".split " "
+    for method in _stringFns
+      def callUnderscoreMethod(method), "String", method
 )

@@ -85,7 +85,7 @@
       array.extendtest();
       return this.extendSpy.calledOn(array).should.be["true"];
     });
-    return it("should extend pass in object with 4th argument of `def`", function() {
+    it("should extend pass in object with 4th argument of `def`", function() {
       var array, extra;
       extra = {
         Array: {
@@ -95,6 +95,37 @@
       array = def([], extra);
       array.should.have.property("testProp");
       return array.testProp.should.be["true"];
+    });
+    return it("should extend underscore method default", function() {
+      var content, method, methods, specs, _i, _len, _ref, _results;
+      specs = [
+        {
+          content: [],
+          methods: "first initial last rest compact flatten without union intersection difference uniq zip object range"
+        }, {
+          content: {},
+          methods: "keys values pairs invert functions extend pick omit defaults clone tap has"
+        }, {
+          content: (function() {}),
+          methods: "bind partial memoize delay defer throttle debounce once wrap"
+        }
+      ];
+      _results = [];
+      for (_i = 0, _len = specs.length; _i < _len; _i++) {
+        _ref = specs[_i], content = _ref.content, methods = _ref.methods;
+        content = def(content);
+        _results.push((function() {
+          var _j, _len1, _ref1, _results1;
+          _ref1 = methods.split(" ");
+          _results1 = [];
+          for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+            method = _ref1[_j];
+            _results1.push(content.should.have.property(method));
+          }
+          return _results1;
+        })());
+      }
+      return _results;
     });
   });
 

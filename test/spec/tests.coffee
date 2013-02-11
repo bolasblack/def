@@ -61,3 +61,16 @@ describe "the def lib", ->
     array = def [], extra
     array.should.have.property "testProp"
     array.testProp.should.be.true
+
+  it "should extend underscore method default", ->
+    specs = [
+      {content: [], methods: "first initial last rest compact flatten without union intersection difference uniq zip object range"}
+      {content: {}, methods: "keys values pairs invert functions extend pick omit defaults clone tap has"}
+      {content: (->), methods: "bind partial memoize delay defer throttle debounce once wrap"}
+      #{content: "", methods: "escape unescape template"}
+    ]
+
+    for {content, methods} in specs
+      content = def content
+      for method in methods.split " "
+        content.should.have.property method
